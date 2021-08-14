@@ -4,15 +4,19 @@ import PostListItem from "../post-list-item";
 
 import './post-list.css'
 
-const PostList = ({posts, onDelete}) => {
+const PostList = ({posts, onDelete, onToggleElement}) => {
 
     const elements = posts.map(post => {
+        const {id, ...itemProps} = post;
         return (
             <li key={post.id} className="list-group-item">
                 <PostListItem 
-                    label={post.label} 
-                    important={post.important} 
-                    onDelete={() => onDelete(post.id)} />
+                    {...itemProps}
+
+                    onDelete={() => onDelete(post.id)}
+                    onToggleImportant={()=>onToggleElement(post.id, 'important')}
+                    onToggleLike={()=>onToggleElement(post.id, 'like')} 
+                    />
             </li>
         )
     });

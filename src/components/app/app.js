@@ -26,7 +26,7 @@ export class App extends React.Component {
     //             {label: 'I need a break...', important: false, id: 3}
     //         ]
     //     };
-        
+
     //     this.deleteItem = this.deleteItem.bind(this);
     // }
 
@@ -46,30 +46,24 @@ export class App extends React.Component {
             {
                 label: "Going to learn React",
                 important: true,
+                like: false,
                 id: 1
             },
             {
                 label: "Going to learn Javascript",
                 important: false,
+                like: false,
                 id: 2
             },
             {
                 label: "Going to learn HTML, CSS",
                 important: false,
+                like: false,
                 id: 3
             }
-        ]
-    }
-
-    deleteItem = (id) => {
-        this.setState(({data}) => {
-            const index = data.findIndex(elem => elem.id === id);
-
-            const dataChanged = [...data.slice(0, index), ...data.slice(index+1)]
-            return {
-                data: dataChanged
-            }
-        })
+        ],
+        term: '',
+        filter: 'all'
     }
 
     addItem = (body) => {
@@ -87,19 +81,84 @@ export class App extends React.Component {
         });
     }
 
+    deleteItem = (id) => {
+        this.setState(({ data }) => {
+            const index = data.findIndex(elem => elem.id === id);
+
+            const dataChanged = [...data.slice(0, index), ...data.slice(index + 1)]
+            return {
+                data: dataChanged
+            }
+        })
+    }
+
+    onToggleElement = (id, changeElement) => {
+        this.setState(state => {
+            const index = state.data.findIndex(element => element.id === id);
+            let newObj;
+            if (changeElement === 'like') {
+                newObj = { ...state.data[index], like: !(state.data[index].like)};
+            }
+            else if (changeElement === "important") {
+                newObj = { ...state.data[index], important: !(state.data[index].important)};
+            }
+
+            const newData = [...state.data.slice(0, index), newObj, ...state.data.slice(index + 1)];
+
+            return { data: newData }
+        })
+    }
+
+    searchPost = (items, term) => {
+        if (term.length === 0) {
+            return items
+        }
+
+        return items.filter((item)=>{
+            return (
+                item.label.indexOf(term) > -1
+            )
+        })
+    }
+
+    onUpdateSearchTerm = (term) => {
+        this.setState({term: term})
+    }
+
+    filterPost = (items, filter) => {
+        if (filter === 'like') {
+            return items.filter(item => item.like)
+        } else {
+            return items
+        }
+    }
+
+    onFliterSelect = (filter) => {
+        this.setState({filter: filter})
+    }
+
     render() {
+
+        const liked = this.state.data.filter(elem => elem.like).length;
+        const allPosts = this.state.data.length;
+
+        const visiblePosts = this.filterPost(this.searchPost(this.state.data, this.state.term), this.state.filter);
+
         return (
             <AppBlock>
-                <AppHeader/>
+                <AppHeader liked={liked} allPosts={allPosts}/>
                 <div className="search-panel d-flex">
-                    <SearchPanel/>
-                    <PostStatusFilter/>
+                    <SearchPanel 
+                    onUpdateSearch={this.onUpdateSearchTerm}/>
+                    <PostStatusFilter 
+                    filter={this.state.filter}
+                    onFilterSelect={this.onFliterSelect}/>
                 </div>
-                <PostList posts={this.state.data} onDelete={this.deleteItem} />
+                <PostList posts={visiblePosts} onDelete={this.deleteItem} onToggleElement={this.onToggleElement} />
                 <PostAddForm
                     onAdd={this.addItem}
                 />
             </AppBlock>
         )
-    }    
+    }
 }

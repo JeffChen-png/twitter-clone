@@ -11,23 +11,28 @@ const Header = styled.div`
 
     h1 {
         font-size: 26px;
-        color: ${props => props.colored ? 'red':'black'};
+        color: ${props => props.colored ? 'gray':'black'};
+        transition: 0.5s all;
         :hover {
-            color: blue;
+            font-size: 30px;
         }
     }
 
     h2 {
         font-size: 1.2rem;
         color: grey;
+        transition: 0.5s all;
+        :hover {
+            font-size: 1.3rem;
+        }
     }
 `
 
-const AppHeader = () => {
+const AppHeader = ({liked, allPosts}) => {
     return (
         <Header colored>
 			<h1>Medvedev Rustam</h1>
-			<h2>5 записей, из них понравилось 0</h2>
+			<h2>{allPosts} записей, из них понравилось {liked}</h2>
         </Header>
     )
 }
