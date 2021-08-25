@@ -16,31 +16,6 @@ const AppBlock = styled.div`
 `
 
 export class App extends React.Component {
-
-    // constructor(props) {
-    //     super(props);
-    //     this.state = {
-    //         data : [
-    //             {label: 'Going to learn React', important: true, id: 1},
-    //             {label: 'That is so good', important: false, id: 2},
-    //             {label: 'I need a break...', important: false, id: 3}
-    //         ]
-    //     };
-
-    //     this.deleteItem = this.deleteItem.bind(this);
-    // }
-
-    // deleteItem(id) {
-    //     this.setState(({data}) => {
-    //         const index = data.findIndex((elem) => elem.id === id);
-
-    //         data.splice(index, 1);
-    //         return {
-    //             data: data
-    //         }
-    //     });
-    // }
-
     state = {
         data: [
             {
@@ -71,7 +46,7 @@ export class App extends React.Component {
             const newItem = {
                 label: body,
                 important: false,
-                id: this.state.data.length + 1
+                id: state.data.length + 1
             }
 
             const newData = [...this.state.data, newItem];
@@ -114,10 +89,8 @@ export class App extends React.Component {
             return items
         }
 
-        return items.filter((item)=>{
-            return (
-                item.label.indexOf(term) > -1
-            )
+        return items.filter((item) => {
+            return item.label.indexOf(term) > -1
         })
     }
 
